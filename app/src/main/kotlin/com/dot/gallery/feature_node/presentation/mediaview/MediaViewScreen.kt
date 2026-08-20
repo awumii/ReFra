@@ -1531,10 +1531,9 @@ fun <T : Media> MediaViewScreen(
             val hdrCache = remember { HashMap<Long, Boolean>() }
             LaunchedEffect(mediaState.value) {
                 withContext(Dispatchers.IO) {
-                    snapshotFlow { pagerState.currentPage }.collectLatest {
-                        printWarning("Trying to set HDR mode for page $it")
-                        val media = currentMedia
+                    snapshotFlow { currentMedia }.collectLatest { media ->
                         if (media?.isImage == true) {
+                            printWarning("Trying to set HDR mode for media ${media.id}")
                             val cached = hdrCache[media.id]
                             if (cached != null) {
                                 withContext(Dispatchers.Main.immediate) {
@@ -1543,6 +1542,7 @@ fun <T : Media> MediaViewScreen(
                                 printWarning("Setting HDR Mode to $cached (cached)")
                             } else {
                                 val request = ImageRequest(context, media.getUri().toString()) {
+                                    size(com.github.panpf.sketch.util.Size.Origin)
                                     setExtra(
                                         key = "mediaKey",
                                         value = media.idLessKey,

@@ -459,6 +459,8 @@ fun <T : Media> ZoomablePagerImage(
     val fullImageState = rememberAsyncImageState()
     val fullPainter = rememberAsyncImagePainter(
         request = ComposableImageRequest(mediaUri) {
+            size(com.github.panpf.sketch.util.Size.Origin)
+
             if (isEncrypted || isAnimated || isAnimatedRaster) {
                 crossfade(durationMillis = if (animationsEnabled) 200 else 0)
             }
