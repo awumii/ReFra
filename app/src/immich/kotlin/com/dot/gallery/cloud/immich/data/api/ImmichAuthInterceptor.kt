@@ -7,8 +7,11 @@ package com.dot.gallery.cloud.immich.data.api
 
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ImmichAuthInterceptor : Interceptor {
+@Singleton
+class ImmichAuthInterceptor @Inject constructor() : Interceptor {
 
     @Volatile
     var apiKey: String? = null
