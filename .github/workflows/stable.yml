@@ -152,7 +152,7 @@ jobs:
           fileDir: 'app/'
           encodedString: ${{ secrets.SIGNING_KEY }}
       - name: Build Release APK
-        run: test -n "$CARTO_BASEMAP_KEY" && ./gradlew --build-cache :app:assemble${{ matrix.arch }}NoMLRelease
+        run: ./gradlew --build-cache :app:assemble${{ matrix.arch }}NoMLRelease
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -166,7 +166,7 @@ jobs:
           done
       - uses: actions/upload-artifact@v5
         with:
-          name: maps-${{ matrix.arch }}
+          name: standard-${{ matrix.arch }}
           path: app/build/outputs/apk-renamed/**/*.apk
 
   build_gplay:
@@ -196,7 +196,7 @@ jobs:
           fileDir: 'app/'
           encodedString: ${{ secrets.SIGNING_KEY }}
       - name: Build Google Play Bundle
-        run: test -n "$CARTO_BASEMAP_KEY" && ./gradlew --build-cache :app:bundleUniversalWithMLGplay
+        run: ./gradlew --build-cache :app:bundleUniversalWithMLGplay
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -239,8 +239,8 @@ jobs:
           merge-multiple: true
       - uses: actions/download-artifact@v5
         with:
-          pattern: maps-*
-          path: artifacts/maps
+          pattern: standard-*
+          path: artifacts/standard
           merge-multiple: true
       - uses: actions/download-artifact@v5
         with:
@@ -302,12 +302,12 @@ jobs:
           cat .github/VARIANT_INFO.md >> "$CHANGELOG"
           echo "" >> "$CHANGELOG"
 
-          recommend_table "artifacts/maps" "$TAG" >> "$CHANGELOG"
+          recommend_table "artifacts/standard" "$TAG" >> "$CHANGELOG"
           echo "" >> "$CHANGELOG"
 
-          echo "### Standard (NoML)" >> "$CHANGELOG"
+          echo "### Standard" >> "$CHANGELOG"
           echo "" >> "$CHANGELOG"
-          generate_table "artifacts/maps" "$TAG" >> "$CHANGELOG"
+          generate_table "artifacts/standard" "$TAG" >> "$CHANGELOG"
           echo "" >> "$CHANGELOG"
 
           echo "### Offline (NoML)" >> "$CHANGELOG"
